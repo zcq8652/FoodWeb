@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fws.mapper.MenuMapper">
+	<!-- 添加菜谱 -->
+	<insert id="insertMenu" parameterType="com.fws.pojo.Menu">
+		<!-- 返回菜谱的id -->
+		<selectKey keyProperty="id" resultType="int" order="AFTER">
+			select LAST_INSERT_ID()
+		</selectKey>
+		insert into menus(name,menu_describe,menu_key,province_code,u_id,status) values(#{name},#{menuDescribe},#{menuKey},#{provinceCode},#{uid},#{status});
+	</insert>
+	<!-- 添加菜谱完成图 -->
+	<insert id="insertMenuImage" parameterType="com.fws.pojo.MenuImage">
+		insert into menu_images(menu_id,image) values(#{menuId},#{image});
+	</insert>
+	<!-- 添加菜谱食材类别 -->
+	<insert id="insertIngreType" parameterType="com.fws.pojo.IngreType">
+		<!-- 返回菜谱食材类别的id -->
+		<selectKey keyProperty="id" resultType="int" order="AFTER">
+			select LAST_INSERT_ID()
+		</selectKey>
+		insert into ingre_types(menu_id,name) values(#{menuId},#{name});
+	</insert>
+	<!-- 添加菜谱食材 -->
+	<insert id="insertMenuIngredient" parameterType="com.fws.pojo.MenuIngredient">
+		insert into menu_ingredients(type_id,name,dosage) values(#{typeId},#{name},#{dosage});
+	</insert>
+	<!-- 添加菜谱步骤 -->
+	<insert id="insertMenuStep" parameterType="com.fws.pojo.MenuStep">
+		insert into menu_steps(menu_id,image,step_describe,number) values(#{menuId},#{image},#{stepDescribe},#{number});
+	</insert>
+	
+	<resultMap type="com.fws.pojo.Menu" id="menuMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="menuDescribe" column="menu_describe"/>
+		<result property="menuKey" column="menu_key"/>
+		<result property="provinceCode" column="province_code"/>
+		<result property="uid" column="u_id"/>
+		<result property="status" column="status"/>
+	</resultMap>
+	<resultMap type="com.fws.pojo.IngreType" id="ingreTypeMap">
+		<id property="id" column="id"/>
+		<result property="menuId" column="menu_id"/>
+		<result property="name" column="name"/>
+	</resultMap>
+	<resultMap type="com.fws.pojo.MenuIngredient" id="ingredientMap">
+		<id property="id" column="id"/>
+		<result property="typeId" column="type_id"/>
+		<result property="name" column="name"/>
+		<result property="dosage" column="dosage"/>
+	</resultMap>
+	<resultMap type="com.fws.pojo.MenuStep" id="stepMap">
+		<id property="id" column="id"/>
+		<result property="menuId" column="menu_id"/>
+		<result property="image" column="image"/>
+		<result property="stepDescribe" column="step_describe"/>
+		<result property="number" column="number"/>
+	</resultMap>
+	<resultMap type="com.fws.pojo.MenuImage" id="imageMap">
+		<id property="id" column="id"/>
+		<result property="menuId" column="menu_id"/>
+		<result property="image" column="image"/>
+	</resultMap>
+	<!-- 跟据uid查询菜谱id、名称、状态 -->
+	<select id="selectMyMenu" parameterType="int" resultMap="menuMap">
+		select * from menus where u_id=#{param1};
+	</select>
+	<!-- 跟据menuId查询菜谱完成图 -->
+	<select id="selectMenuImage" parameterType="int" resultType="string">
+		select image from menu_images where menu_id=#{param1};
+	</select>
+	<!-- 跟据menuId查询菜谱完成图 -->
+	<select id="selectMenuImage2" parameterType="int" resultMap="imageMap">
+		select * from menu_images where menu_id=#{param1};
+	</select>
+	<!-- 跟据menuId查询菜谱 -->
+	<select id="selectMenuById" parameterType="int" resultMap="menuMap">
+		select * from menus where id=#{param1};
+	</select>
+	<!-- 跟据menuId查询菜谱食材类别 -->
+	<select id="selectIngreType" parameterType="int" resultMap="ingreTypeMap">
+		select * from ingre_types where menu_id=#{param1};
+	</select>
+	<!-- 跟据typeId查询菜谱食材 -->
+	<select id="selectMenuIngredient" parameterType="int" resultMap="ingredientMap">
+		select * from menu_ingredients where type_id=#{param1};
+	</select>
+	<!-- 跟据menuId查询菜谱步骤 -->
+	<select id="selectMenuStep" parameterType="int" resultMap="stepMap">
+		select * from menu_steps where menu_id=#{param1};
+	</select>
+	
+	<!-- 根据menuId删除菜谱 -->
+	<delete id="deleteMenu" parameterType="int">
+		delete from menus where id=#{param1};
+	</delete>
+	<!-- 跟据menuId删除菜谱完成图 -->
+	<delete id="deleteMenuImage" parameterType="int">
+		delete from menu_images where menu_id=#{param1};
+	</delete>
+	<!-- 根据id删除菜谱完成图 -->
+	<delete id="deleteMenuImage2" parameterType="int">
+		delete from menu_images where id=#{param1};
+	</delete>
+	<!-- 跟据menuId删除食材类别 -->
+	<delete id="deleteIngreType" parameterType="int">
+		delete from ingre_types where menu_id=#{param1};
+	</delete>
+	<!-- 根据id删除食材类别 -->
+	<delete id="deleteIngreType2" parameterType="int">
+		delete from ingre_types where id=#{param1};
+	</delete>
+	<!-- 跟据typeId删除菜谱食材 -->
+	<delete id="deleteMenuIngredient" parameterType="int">
+		delete from menu_ingredients where type_id=#{param1};
+	</delete>
+	<!-- 跟据menuId删除菜谱步骤 -->
+	<delete id="deleteMenuStep" parameterType="int">
+		delete from menu_steps where menu_id=#{param1};
+	</delete>
+	<!-- 根据id删除菜谱步骤 -->
+	<delete id="deleteMenuStep2" parameterType="int">
+		delete from menu_steps where id=#{param1};
+	</delete>
+	
+	<!-- 查询最新发布的12张菜谱 -->
+	<select id="selectLatelyMenu" resultMap="menuMap">
+		select * from menus where status=1 order by id desc limit 12;
+	</select>
+	<!-- 跟据menuId查询一张菜谱完成图 -->
+	<select id="selectOneMenuImage" parameterType="int" resultType="string">
+		select image from menu_images where menu_id=#{param1} order by id limit 1;
+	</select>
+	<!-- 根据省份provinceCode查询已发布的菜谱 -->
+	<select id="selectMenuByProvince" parameterType="string" resultMap="menuMap">
+		select * from menus where province_code=#{param1} and status=1 order by id desc;
+	</select>
+	<!-- 模糊查询菜谱 -->
+	<select id="selectMenuBySearch" parameterType="string" resultMap="menuMap">
+		select * from menus where name like "%"#{param1}"%" and status=1 order by id desc;
+	</select>
+	
+	<!-- 根据id修改菜谱 -->
+	<update id="updateMenu" parameterType="com.fws.pojo.Menu">
+		update menus set name=#{name},menu_describe=#{menuDescribe},menu_key=#{menuKey},province_code=#{provinceCode},status=#{status} where id=#{id};
+	</update>
+	<!-- 根据id修改菜谱完成图 -->
+	<update id="updateMenuImage" parameterType="com.fws.pojo.MenuImage">
+		update menu_images set image=#{image} where id=#{id};
+	</update>
+	<!-- 根据id修改菜谱食材类别 -->
+	<update id="updateIngreType" parameterType="com.fws.pojo.IngreType">
+		update ingre_types set name=#{name} where id=#{id};
+	</update>
+	<!-- 根据id修改菜谱食材 -->
+	<update id="updateMenuIngredient" parameterType="com.fws.pojo.MenuIngredient">
+		update menu_ingredients set name=#{name},dosage=#{dosage} where id=#{id};
+	</update>
+	<!-- 根据id修改菜谱步骤 -->
+	<update id="updateMenuStep" parameterType="com.fws.pojo.MenuStep">
+		update menu_steps set image=#{image},step_describe=#{stepDescribe},number=#{number} where id=#{id};
+	</update>
+	<!-- 根据id修改菜谱步骤 -->
+	<update id="updateMenuStep2" parameterType="com.fws.pojo.MenuStep">
+		update menu_steps set step_describe=#{stepDescribe},number=#{number} where id=#{id};
+	</update>
+</mapper>

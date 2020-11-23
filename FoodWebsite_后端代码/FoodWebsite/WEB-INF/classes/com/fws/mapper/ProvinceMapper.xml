@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fws.mapper.ProvinceMapper">
+	<resultMap type="com.fws.pojo.Province" id="provinceMap">
+		<id property="id" column="id"/>
+		<result property="provinceCode" column="province_code"/>
+		<result property="provinceName" column="province_name"/>
+	</resultMap>
+	<!-- 查询所有的省份信息 -->
+	<select id="selectAllProvince" resultMap="provinceMap">
+		select * from provinces;
+	</select>
+</mapper>

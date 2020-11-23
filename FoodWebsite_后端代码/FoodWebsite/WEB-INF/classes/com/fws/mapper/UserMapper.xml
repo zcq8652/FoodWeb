@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fws.mapper.UserMapper">
+	<!-- 新增用户 -->
+	<insert id="insertUser" parameterType="com.fws.pojo.User">
+		<!-- 返回用户的id -->
+		<selectKey keyProperty="id" resultType="int" order="AFTER">
+			select LAST_INSERT_ID()
+		</selectKey>
+		insert into users(nickname,password) values(#{nickname},#{password});
+	</insert>
+	<!-- 跟据用户id给用户添加账号 -->
+	<update id="updateAccountById">
+		update users set account=#{param2} where id=#{param1};
+	</update>
+	<!-- 跟据账号查询用户信息 -->
+	<select id="selectUserByAccount" parameterType="string" resultType="com.fws.pojo.User">
+		select * from users where account=#{param1};
+	</select>
+	<!-- 跟据账号修改用户信息 -->
+	<update id="updateUserByAccount" parameterType="com.fws.pojo.User">
+		update users set nickname=#{nickname},username=#{username},sex=#{sex},age=#{age},telephone=#{telephone},photo=#{photo} where account=#{account};
+	</update>
+	<!-- 头像没有修改时，跟据账号修改用户信息 -->
+	<update id="updateUserByAccount2" parameterType="com.fws.pojo.User">
+		update users set nickname=#{nickname},username=#{username},sex=#{sex},age=#{age},telephone=#{telephone} where account=#{account};
+	</update>
+	<!-- 跟据账号查询用户头像 -->
+	<select id="selectPhotoByAccount" parameterType="string" resultType="string">
+		select photo from users where account=#{param1};
+	</select>
+	<!-- 根据账号查询用户密码 -->
+	<select id="selectPassByAccount" parameterType="string" resultType="string">
+		select password from users where account=#{param1};
+	</select>
+	<!-- 跟据账号修改密码 -->
+	<update id="updatePassByAccount">
+		update users set password=#{param2} where account=#{param1};
+	</update>
+	<!-- 跟据id查询用户昵称 -->
+	<select id="selectNicknameById" parameterType="int" resultType="string">
+		select nickname from users where id=#{param1};
+	</select>
+</mapper>
